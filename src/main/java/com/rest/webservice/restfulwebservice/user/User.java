@@ -2,10 +2,15 @@ package com.rest.webservice.restfulwebservice.user;
 
 import java.time.LocalDate;
 
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 public class User {
 	
 	private Integer id;
+	@Size(min=6)
 	private String name;
+	@Past
 	private LocalDate bDay;
 	public User(Integer id, String name, LocalDate bDay) {
 		super();

@@ -1,8 +1,9 @@
 package com.rest.webservice.restfulwebservice.user;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +39,7 @@ private UserDaoService userService;
 		
 	}
 	@PostMapping(path = "/users")
-	public ResponseEntity<Object> postUser(@RequestBody User user) {
+	public ResponseEntity<Object> postUser(@Valid @RequestBody User user) {
 		this.userService.save(user);
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}")
