@@ -11,3 +11,13 @@ insert into user_details(id,b_day,name)
 values(270, current_date(), 'Gandalf El Gris');
 insert into user_details(id,b_day,name)
 values(420, current_date(), 'El viejo Toby');
+
+
+insert into post(id, description, user_id)
+values(3214, 'no puedes pasar!!!', 270);
+insert into post(id, description, user_id)
+values(33, 'que pinga decis puto', 213);
+insert into post(id, description, user_id)
+values(3321, 'que porros ni que porros', 420);
+insert into post(id, description, user_id)
+values(5, 'ni cuando termino borro el historial papafrita CTM', 222);

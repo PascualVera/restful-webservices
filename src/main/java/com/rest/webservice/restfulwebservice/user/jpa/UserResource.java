@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.rest.webservice.restfulwebservice.post.Post;
+import com.rest.webservice.restfulwebservice.post.PostRepository;
 import com.rest.webservice.restfulwebservice.user.User;
 import com.rest.webservice.restfulwebservice.user.UserDaoService;
 import com.rest.webservice.restfulwebservice.user.UserNotFoundException;
@@ -25,14 +27,17 @@ import com.rest.webservice.restfulwebservice.user.UserNotFoundException;
 public class UserResource {
 	
 private UserRepository repository;
-private UserDaoService userService;
+private PostRepository postRepository;
 	
-	public UserResource(UserDaoService userService, UserRepository repository) {
+	public UserResource( UserRepository repository, PostRepository postRepository) {
 		super();
-		this.userService = userService;
+		
 		this.repository = repository;
+		this.postRepository=postRepository;
 	}
 	
+	
+	//USER STUFF
 	@GetMapping( path ="/users")
 	public List<User> getAllUsers() {
 		return repository.findAll();
@@ -57,15 +62,15 @@ private UserDaoService userService;
 		return ResponseEntity.created(location).build();
 	}
 	
-	@PutMapping(path="/users/{id}")
-	public User updateUser(@PathVariable int id, @RequestBody User user) {
-		user.setId(id);
-		User target = this.userService.update(user);
-		if(target == null) {
-			throw new UserNotFoundException("id: "+ id);
-		}
-		return target;
-	}
+//	@PutMapping(path="/users/{id}")
+//	public User updateUser(@PathVariable int id, @RequestBody User user) {
+//		user.setId(id);
+//		User target = repository.(user);
+//		if(target == null) {
+//			throw new UserNotFoundException("id: "+ id);
+//		}
+//		return target;
+//	}
 	
 	@DeleteMapping(path = "/users/{id}")
 	
@@ -73,4 +78,33 @@ private UserDaoService userService;
 		repository.deleteById(id);
 	}
 	
+	//POST STUFF
+	@GetMapping(path = "/users/{id}/post")
+	
+	public List<Post> getPostFromUser(@PathVariable int id) {
+		Optional<User> user = repository.findById(id);
+		if(user.isEmpty()) {
+			throw new UserNotFoundException("id: "+ id);
+		}
+		return user.get().getPosts();
+	}
+	
+	@PostMapping(path = "/users/{id}/post")
+	public ResponseEntity<Object> createPostFromUser(@PathVariable int id,@Valid @RequestBody Post post ) {
+		Optional<User> user = repository.findById(id);
+		if(user.isEmpty()) {
+			throw new UserNotFoundException("id: "+ id);
+		}
+		
+		post.setUser(user.get());
+		Post savedPost = postRepository.save(post);
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(savedPost.getId())
+				.toUri();
+		return ResponseEntity.created(location).build();
+		
+		
+	}
+		
 }

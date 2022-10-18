@@ -1,14 +1,18 @@
 package com.rest.webservice.restfulwebservice.user;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.rest.webservice.restfulwebservice.post.Post;
 
 @Entity(name = "user_details")
 public class User {
@@ -24,6 +28,10 @@ public class User {
 	@Past
 	@JsonProperty("b_day")
 	private LocalDate bDay;
+	
+	@OneToMany(mappedBy= "user")
+	@JsonIgnore
+	private List<Post> posts;
 	protected User() {
 		
 	}
@@ -52,6 +60,14 @@ public class User {
 	}
 	public void setbDay(LocalDate bDay) {
 		this.bDay = bDay;
+	}
+
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
 	}
 	
 	
